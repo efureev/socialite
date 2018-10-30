@@ -1,9 +1,11 @@
 {
-  "name": "fureev/socialite",
+  "version": "3.2.0",
+  "name": "efureev/socialite",
   "description": "Laravel wrapper around OAuth 1 & OAuth 2 libraries.",
   "keywords": [
     "oauth",
-    "laravel"
+    "laravel",
+    "social"
   ],
   "license": "MIT",
   "homepage": "https://laravel.com",
@@ -19,16 +21,15 @@
   ],
   "require": {
     "php": ">=7.1",
-    "fureev/support": "dev-master",
-    "guzzlehttp/guzzle": "~6.0",
-    "illuminate/contracts": "~5.4",
-    "illuminate/http": "~5.4",
-    "illuminate/support": "~5.4",
-    "league/oauth1-client": "~1.0"
+    "fureev/support": "~1.0",
+    "guzzlehttp/guzzle": "~6.3",
+    "illuminate/contracts": "~5.7",
+    "illuminate/http": "~5.7",
+    "illuminate/support": "~5.7",
+    "league/oauth1-client": "~1.7"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.0",
-    "laravel/socialite": "^3.2",
     "phpstan/phpstan": "^0.10.3"
   },
   "autoload": {
@@ -57,12 +58,10 @@
   "config": {
     "sort-packages": true
   },
-
   "scripts": {
     "test": "@php ./vendor/bin/phpunit --no-coverage",
     "test-cover": "@php ./vendor/bin/phpunit --coverage-text",
     "phpstan": "@php ./vendor/bin/phpstan analyze --ansi --level=2 ./src"
   },
-  "minimum-stability": "stable",
   "prefer-stable": true
 }
