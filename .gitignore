@@ -1,0 +1,11 @@
+/storage/coverage
+/storage/*.key
+/vendor
+/.idea
+
+composer.lock
+
+.env
+.phpunit.result.cache
+
+.DS_Store
