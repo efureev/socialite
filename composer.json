@@ -21,7 +21,7 @@
   ],
   "require": {
     "php": ">=7.1",
-    "fureev/support": "~1.0",
+    "efureev/support": "~1.0",
     "guzzlehttp/guzzle": "~6.3",
     "illuminate/contracts": "~5.7",
     "illuminate/http": "~5.7",
