@@ -43,9 +43,6 @@
     }
   },
   "extra": {
-    "branch-alias": {
-      "dev-master": "master"
-    },
     "laravel": {
       "providers": [
         "Fureev\\Socialite\\SocialiteServiceProvider"
