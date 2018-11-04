@@ -182,7 +182,7 @@ abstract class AbstractUser implements ArrayAccess, Contracts\User
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return mixed
      */
@@ -192,6 +192,6 @@ abstract class AbstractUser implements ArrayAccess, Contracts\User
             return $this->raw[ $key ];
         }
 
-        throw new MissingPropertyException($this->raw, $key);
+        return null;
     }
 }
