@@ -4,6 +4,7 @@ namespace Fureev\Socialite;
 
 
 use ArrayAccess;
+use Php\Support\Exceptions\MissingPropertyException;
 use Php\Support\Traits\ConfigurableTrait;
 
 /**
@@ -178,5 +179,19 @@ abstract class AbstractUser implements ArrayAccess, Contracts\User
     public function offsetUnset($offset)
     {
         unset($this->raw[ $offset ]);
+    }
+
+    /**
+     * @param $key
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        if (isset($this->raw[ $key ])) {
+            return $this->raw[ $key ];
+        }
+
+        throw new MissingPropertyException($this->raw, $key);
     }
 }
