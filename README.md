@@ -1,11 +1,10 @@
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-socialite.svg"></p>
 
-<p align="center">
-<a href="https://travis-ci.org/efureev/socialite"><img src="https://travis-ci.org/laravel/socialite.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/efureev/socialite"><img src="https://poser.pugx.org/efureev/socialite/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/efureev/socialite"><img src="https://poser.pugx.org/efureev/socialite/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/efureev/socialite"><img src="https://poser.pugx.org/efureev/socialite/license.svg" alt="License"></a>
-</p>
+[![Build Status](https://travis-ci.org/laravel/socialite.svg?branch=3.0)](https://travis-ci.org/laravel/socialite)
+[![Latest Stable Version](https://poser.pugx.org/efureev/socialite/v/stable)](https://packagist.org/packages/efureev/socialite)
+[![Total Downloads](https://poser.pugx.org/efureev/socialite/downloads)](https://packagist.org/packages/efureev/socialite)
+[![Latest Unstable Version](https://poser.pugx.org/efureev/socialite/v/unstable)](https://packagist.org/packages/efureev/socialite)
+[![License](https://poser.pugx.org/efureev/socialite/license)](https://packagist.org/packages/efureev/socialite)
 
 ## Introduction
 
