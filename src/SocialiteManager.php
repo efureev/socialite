@@ -4,6 +4,7 @@ namespace Fureev\Socialite;
 
 use Fureev\Socialite\Two\CustomProvider;
 use Fureev\Socialite\Two\GithubProvider;
+use Fureev\Socialite\Two\VkProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Manager;
 use Illuminate\Support\Str;
@@ -87,17 +88,6 @@ class SocialiteManager extends Manager implements Contracts\Factory
         return $result;
     }
 
-    /**
-     * Create an instance of the specified driver.
-     *
-     * @return \Fureev\Socialite\Two\AbstractProvider
-     * @throws \Php\Support\Exceptions\InvalidConfigException
-     * @throws \Php\Support\Exceptions\MissingConfigException
-     */
-    protected function createGithubDriver()
-    {
-        return $this->buildProvider(GithubProvider::class, $this->getConfig('drivers.github'));
-    }
 
     /**
      * Create an instance of the specified driver.
@@ -136,8 +126,8 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     public function formatConfig(array $config)
     {
-
         if (!isset($config['redirectUrl'])) {
+//            dd($config);
             $config['redirectUrl'] = $this->formatUrl(value($config['redirect']));;
         }
 
@@ -265,6 +255,27 @@ class SocialiteManager extends Manager implements Contracts\Factory
         return $this->buildCustomProvider($driver);
     }
 
+    /**
+     * Create an instance of the specified driver.
+     *
+     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @throws \Php\Support\Exceptions\InvalidConfigException
+     * @throws \Php\Support\Exceptions\MissingConfigException
+     */
+    protected function createGithubDriver($driverConfig = null)
+    {
+        return $this->buildProvider(GithubProvider::class, $driverConfig ?? $this->getConfig('drivers.github'));
+    }
+
+    /**
+     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @throws \Php\Support\Exceptions\InvalidConfigException
+     * @throws \Php\Support\Exceptions\MissingConfigException
+     */
+    protected function createVkDriver($driverConfig = null)
+    {
+        return $this->buildProvider(VkProvider::class, $driverConfig ?? $this->getConfig('drivers.vk'));
+    }
 
     /**
      * Create an instance of the specified driver.

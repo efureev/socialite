@@ -52,7 +52,7 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
      *
      * @return array
      */
-    protected function getTokenFields($code)
+    protected function getTokenFields(string $code)
     {
         return array_add(
             parent::getTokenFields($code), 'grant_type', 'authorization_code'

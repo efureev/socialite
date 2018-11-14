@@ -165,13 +165,14 @@ abstract class AbstractProvider implements ProviderContract
 
     /**
      * @param string|null $key
+     * @param mixed|null  $default
      *
      * @return mixed
      * @throws \Exception
      */
-    public function getDriverConfig(?string $key = null)
+    public function getDriverConfig(?string $key = null, $default = null)
     {
-        return Arr::get($this->config, $key);
+        return Arr::get($this->config, $key, $default);
     }
 
     /**
