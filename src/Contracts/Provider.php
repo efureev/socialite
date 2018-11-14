@@ -22,4 +22,11 @@ interface Provider
      * @return \Fureev\Socialite\Contracts\User
      */
     public function user();
+
+
+    /**
+     * @return string
+     */
+    public function getName(): string;
+
 }

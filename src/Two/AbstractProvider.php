@@ -32,7 +32,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @var string
      */
-    public $name;
+    protected $name;
 
     /**
      * The config
@@ -156,11 +156,19 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return $this
      */
-    public function name(string $name)
+    public function setName(string $name)
     {
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**

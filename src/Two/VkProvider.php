@@ -62,9 +62,7 @@ class VkProvider extends AbstractProvider implements ProviderInterface
         $response = $this->getHttpClient()->get('https://api.vk.com/method/users.get?' . $params);
 
         $response = \json_decode($response->getBody(), true);
-
-        dd($response);
-
+        
         if (!is_array($response) || !isset($response['response'][0])) {
             throw new \RuntimeException(sprintf(
                 'Invalid JSON response from VK: %s',

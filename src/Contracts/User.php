@@ -21,26 +21,26 @@ interface User
      *
      * @return string
      */
-    public function getNickname();
+    public function getNickname(): string;
 
     /**
      * Get the full name of the user.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Get the e-mail address of the user.
      *
      * @return string
      */
-    public function getEmail();
+    public function getEmail(): string;
 
     /**
      * Get the avatar / image URL for the user.
      *
-     * @return string
+     * @return null|string
      */
-    public function getAvatar();
+    public function getAvatar(): ?string;
 }

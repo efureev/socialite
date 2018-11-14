@@ -1,5 +1,5 @@
 {
-  "version": "0.3.2",
+  "version": "0.3.3",
   "name": "efureev/socialite",
   "description": "Laravel wrapper around OAuth 1 & OAuth 2 libraries.",
   "keywords": [

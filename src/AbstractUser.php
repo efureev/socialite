@@ -4,7 +4,6 @@ namespace Fureev\Socialite;
 
 
 use ArrayAccess;
-use Php\Support\Exceptions\MissingPropertyException;
 use Php\Support\Traits\ConfigurableTrait;
 
 /**
