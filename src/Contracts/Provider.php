@@ -29,9 +29,4 @@ interface Provider
      */
     public function getName(): string;
 
-    /**
-     * @return array
-     */
-    public function getRaw(): array;
-
 }

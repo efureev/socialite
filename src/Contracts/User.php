@@ -43,4 +43,11 @@ interface User
      * @return null|string
      */
     public function getAvatar(): ?string;
+
+    /**
+     * @return array
+     */
+    public function getRaw(): array;
+
+
 }
