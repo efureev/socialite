@@ -19,9 +19,9 @@ interface User
     /**
      * Get the nickname / username for the user.
      *
-     * @return string
+     * @return string|null
      */
-    public function getNickname(): string;
+    public function getNickname(): ?string;
 
     /**
      * Get the full name of the user.

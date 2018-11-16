@@ -25,7 +25,7 @@ abstract class AbstractUser implements ArrayAccess, Contracts\User
     /**
      * The user's nickname / username.
      *
-     * @var string
+     * @var string|null
      */
     public $nickname;
 
@@ -70,9 +70,9 @@ abstract class AbstractUser implements ArrayAccess, Contracts\User
     /**
      * Get the nickname / username for the user.
      *
-     * @return string
+     * @return string|null
      */
-    public function getNickname(): string
+    public function getNickname(): ?string
     {
         return $this->nickname;
     }
