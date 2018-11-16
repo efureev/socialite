@@ -39,6 +39,26 @@ class VkProvider extends AbstractProvider implements ProviderInterface
         return 'https://oauth.vk.com/access_token';
     }
 
+    /**
+     * @return \Fureev\Socialite\Contracts\User|\Fureev\Socialite\Two\AbstractProvider|\Fureev\Socialite\Two\User
+     * @throws \Exception
+     */
+    public function user()
+    {
+        if ($this->hasInvalidState()) {
+            throw new InvalidStateException;
+        }
+
+        $response = $this->getAccessTokenResponse($this->getCode());
+
+        $token = Arr::get($response, 'access_token');
+
+        $user = $this->mapUserToObject($this->getUserByToken($response));
+
+        return $user->setToken($token)
+            ->setRefreshToken(Arr::get($response, 'refresh_token'))
+            ->setExpiresIn(Arr::get($response, 'expires_in'));
+    }
 
     /**
      * {@inheritdoc}
