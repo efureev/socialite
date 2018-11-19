@@ -2,11 +2,12 @@
 
 namespace Fureev\Socialite\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use Fureev\Socialite\Contracts\Factory;
+use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \Fureev\Socialite\SocialiteManager
+ * @mixin  \Fureev\Socialite\SocialiteManager
  */
 class Socialite extends Facade
 {
