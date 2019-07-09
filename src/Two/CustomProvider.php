@@ -15,7 +15,7 @@ class CustomProvider extends AbstractProvider implements ProviderInterface
      * {@inheritdoc}
      * @throws \Exception
      */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
         return $this->buildAuthUrlFromBase($this->getDriverConfig('url_auth'), $state);
     }
@@ -24,7 +24,7 @@ class CustomProvider extends AbstractProvider implements ProviderInterface
      * {@inheritdoc}
      * @throws \Exception
      */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
         return $this->getDriverConfig('url_token');
     }
@@ -53,7 +53,7 @@ class CustomProvider extends AbstractProvider implements ProviderInterface
      * @return array|mixed
      * @throws \Exception
      */
-    protected function getUserByToken($token)
+    protected function getUserByToken($token): array
     {
         \Php\Support\Helpers\Arr::arrayReplaceByTemplate($this->guzzle, ['{{%TOKEN%}}' => $token]);
 

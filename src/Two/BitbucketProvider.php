@@ -3,8 +3,8 @@
 namespace Fureev\Socialite\Two;
 
 use Exception;
-use Illuminate\Support\Arr;
 use GuzzleHttp\ClientInterface;
+use Illuminate\Support\Arr;
 
 class BitbucketProvider extends AbstractProvider implements ProviderInterface
 {
@@ -25,7 +25,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
         return $this->buildAuthUrlFromBase('https://bitbucket.org/site/oauth2/authorize', $state);
     }
@@ -33,7 +33,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
         return 'https://bitbucket.org/site/oauth2/access_token';
     }
@@ -41,9 +41,9 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getUserByToken($token)
+    protected function getUserByToken($token): array
     {
-        $userUrl = 'https://api.bitbucket.org/2.0/user?access_token='.$token;
+        $userUrl = 'https://api.bitbucket.org/2.0/user?access_token=' . $token;
 
         $response = $this->getHttpClient()->get($userUrl);
 
@@ -59,12 +59,13 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * Get the email for the given access token.
      *
-     * @param  string  $token
+     * @param string $token
+     *
      * @return string|null
      */
-    protected function getEmailByToken($token)
+    protected function getEmailByToken($token): ?string
     {
-        $emailsUrl = 'https://api.bitbucket.org/2.0/user/emails?access_token='.$token;
+        $emailsUrl = 'https://api.bitbucket.org/2.0/user/emails?access_token=' . $token;
 
         try {
             $response = $this->getHttpClient()->get($emailsUrl);
@@ -75,7 +76,7 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
         $emails = json_decode($response->getBody(), true);
 
         foreach ($emails['values'] as $email) {
-            if ($email['type'] == 'email' && $email['is_primary'] && $email['is_confirmed']) {
+            if ($email['type'] === 'email' && $email['is_primary'] && $email['is_confirmed']) {
                 return $email['email'];
             }
         }
@@ -96,7 +97,8 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * Get the access token for the given code.
      *
-     * @param  string  $code
+     * @param string $code
+     *
      * @return string
      */
     public function getAccessToken($code)
@@ -115,10 +117,11 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * Get the POST fields for the token request.
      *
-     * @param  string  $code
+     * @param string $code
+     *
      * @return array
      */
-    protected function getTokenFields($code)
+    protected function getTokenFields($code): array
     {
         return parent::getTokenFields($code) + ['grant_type' => 'authorization_code'];
     }

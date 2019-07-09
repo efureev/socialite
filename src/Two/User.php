@@ -35,10 +35,11 @@ class User extends AbstractUser
     /**
      * Set the token on the user.
      *
-     * @param  string  $token
+     * @param string $token
+     *
      * @return $this
      */
-    public function setToken($token)
+    public function setToken($token): self
     {
         $this->token = $token;
 
@@ -48,10 +49,11 @@ class User extends AbstractUser
     /**
      * Set the refresh token required to obtain a new access token.
      *
-     * @param  string  $refreshToken
+     * @param string $refreshToken
+     *
      * @return $this
      */
-    public function setRefreshToken($refreshToken)
+    public function setRefreshToken($refreshToken): self
     {
         $this->refreshToken = $refreshToken;
 
@@ -61,10 +63,11 @@ class User extends AbstractUser
     /**
      * Set the number of seconds the access token is valid for.
      *
-     * @param  int  $expiresIn
+     * @param int $expiresIn
+     *
      * @return $this
      */
-    public function setExpiresIn($expiresIn)
+    public function setExpiresIn($expiresIn): self
     {
         $this->expiresIn = $expiresIn;
 

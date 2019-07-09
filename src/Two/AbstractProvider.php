@@ -137,8 +137,8 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Create a new provider instance.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  array                    $config
+     * @param \Illuminate\Http\Request $request
+     * @param array $config
      *
      * @return void
      */
@@ -156,7 +156,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return $this
      */
-    public function setName(string $name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -173,7 +173,7 @@ abstract class AbstractProvider implements ProviderContract
 
     /**
      * @param string|null $key
-     * @param mixed|null  $default
+     * @param mixed|null $default
      *
      * @return mixed
      * @throws \Exception
@@ -186,7 +186,7 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * @param array $config
      */
-    protected function setDriverConfig(array $config)
+    protected function setDriverConfig(array $config): void
     {
         $this->config = $config;
     }
@@ -194,32 +194,32 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get the authentication URL for the provider.
      *
-     * @param  string $state
+     * @param string $state
      *
      * @return string
      */
-    abstract protected function getAuthUrl($state);
+    abstract protected function getAuthUrl($state): string;
 
     /**
      * Get the token URL for the provider.
      *
      * @return string
      */
-    abstract protected function getTokenUrl();
+    abstract protected function getTokenUrl(): string;
 
     /**
      * Get the raw user for the given access token.
      *
-     * @param  string $token
+     * @param string $token
      *
      * @return array
      */
-    abstract protected function getUserByToken($token);
+    abstract protected function getUserByToken($token): array;
 
     /**
      * Map the raw user array to a Socialite User instance.
      *
-     * @param  array $user
+     * @param array $user
      *
      * @return \Fureev\Socialite\Two\User
      */
@@ -245,8 +245,8 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get the authentication URL for the provider.
      *
-     * @param  string $url
-     * @param  string $state
+     * @param string $url
+     * @param string $state
      *
      * @return string
      */
@@ -258,16 +258,16 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get the GET parameters for the code request.
      *
-     * @param  string|null $state
+     * @param string|null $state
      *
      * @return array
      */
     protected function getCodeFields($state = null)
     {
         $fields = [
-            'client_id'     => $this->clientId,
-            'redirect_uri'  => $this->callbackUrl,
-            'scope'         => $this->formatScopes($this->getScopes(), $this->scopeSeparator),
+            'client_id' => $this->clientId,
+            'redirect_uri' => $this->callbackUrl,
+            'scope' => $this->formatScopes($this->getScopes(), $this->scopeSeparator),
             'response_type' => 'code',
         ];
 
@@ -281,8 +281,8 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Format the given scopes.
      *
-     * @param  array  $scopes
-     * @param  string $scopeSeparator
+     * @param array $scopes
+     * @param string $scopeSeparator
      *
      * @return string
      */
@@ -314,7 +314,7 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get a Social User instance from a known access token.
      *
-     * @param  string $token
+     * @param string $token
      *
      * @return \Fureev\Socialite\Two\User
      */
@@ -330,7 +330,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return bool
      */
-    protected function hasInvalidState()
+    protected function hasInvalidState(): bool
     {
         if ($this->isStateless()) {
             return false;
@@ -338,23 +338,23 @@ abstract class AbstractProvider implements ProviderContract
 
         $state = $this->request->session()->pull('state');
 
-        return !(strlen($state) > 0 && $this->request->input('state') === $state);
+        return !($state !== '' && $this->request->input('state') === $state);
     }
 
     /**
      * Get the access token response for the given code.
      *
-     * @param  string $code
+     * @param string $code
      *
      * @return array
      */
-    public function getAccessTokenResponse($code)
+    public function getAccessTokenResponse($code): array
     {
         $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
 
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
             'headers' => ['Accept' => 'application/json'],
-            $postKey  => $this->getTokenFields($code),
+            $postKey => $this->getTokenFields($code),
         ]);
 
         return json_decode($response->getBody(), true);
@@ -365,17 +365,17 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get the POST fields for the token request.
      *
-     * @param  string $code
+     * @param string $code
      *
      * @return array
      */
-    protected function getTokenBaseFields(string $code)
+    protected function getTokenBaseFields(string $code): array
     {
         return [
-            'client_id'     => $this->clientId,
+            'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
-            'code'          => $code,
-            'redirect_uri'  => $this->callbackUrl,
+            'code' => $code,
+            'redirect_uri' => $this->callbackUrl,
         ];
     }
 
@@ -384,14 +384,14 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return array
      */
-    protected function getTokenFields(string $code)
+    protected function getTokenFields(string $code): array
     {
         $data = $this->getTokenBaseFields($code);
 
         if (is_array($this->tokenFieldsExtra)) {
             $array = $this->tokenFieldsExtra;
-            array_walk($array, function ($v, $k) use (&$data) {
-                $data = array_add($data, $k, $v);
+            array_walk($array, static function ($v, $k) use (&$data) {
+                $data = Arr::add($data, $k, $v);
             });
         }
 
@@ -403,7 +403,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return string
      */
-    protected function getCode()
+    protected function getCode(): string
     {
         return $this->request->query('code');
     }
@@ -411,11 +411,11 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Merge the scopes of the requested access.
      *
-     * @param  array|string $scopes
+     * @param array|string $scopes
      *
      * @return $this
      */
-    public function scopes($scopes)
+    public function scopes($scopes): self
     {
         $this->scopes = array_unique(array_merge($this->scopes, (array)$scopes));
 
@@ -425,11 +425,11 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Set the scopes of the requested access.
      *
-     * @param  array|string $scopes
+     * @param array|string $scopes
      *
      * @return $this
      */
-    public function setScopes($scopes)
+    public function setScopes($scopes): self
     {
         $this->scopes = array_unique((array)$scopes);
 
@@ -441,7 +441,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return array
      */
-    public function getScopes()
+    public function getScopes(): array
     {
         return $this->scopes;
     }
@@ -449,11 +449,11 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Set the redirect URL.
      *
-     * @param  string $url
+     * @param string $url
      *
      * @return $this
      */
-    public function redirectUrl($url)
+    public function redirectUrl($url): self
     {
         $this->redirectUrl = $url;
 
@@ -465,7 +465,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return string
      */
-    public function getRedirectUrl()
+    public function getRedirectUrl(): string
     {
         return $this->redirectUrl;
     }
@@ -474,7 +474,7 @@ abstract class AbstractProvider implements ProviderContract
      * @return string
      * @throws \Exception
      */
-    public function label()
+    public function getLabel(): string
     {
         return $this->getDriverConfig('label') ?? $this->name;
     }
@@ -482,7 +482,7 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Get a instance of the Guzzle HTTP client.
      *
-     * @return \GuzzleHttp\Client
+     * @return Client
      */
     protected function getHttpClient()
     {
@@ -496,11 +496,11 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Set the Guzzle HTTP client instance.
      *
-     * @param  \GuzzleHttp\Client $client
+     * @param Client $client
      *
      * @return $this
      */
-    public function setHttpClient(Client $client)
+    public function setHttpClient(Client $client): self
     {
         $this->httpClient = $client;
 
@@ -510,11 +510,11 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Set the request instance.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return $this
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): self
     {
         $this->request = $request;
 
@@ -526,7 +526,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return bool
      */
-    protected function usesState()
+    protected function usesState(): bool
     {
         return !$this->stateless;
     }
@@ -536,7 +536,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return bool
      */
-    protected function isStateless()
+    protected function isStateless(): bool
     {
         return $this->stateless;
     }
@@ -546,7 +546,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return $this
      */
-    public function stateless()
+    public function stateless(): self
     {
         $this->stateless = true;
 
@@ -559,7 +559,7 @@ abstract class AbstractProvider implements ProviderContract
      * @return string
      * @throws \Exception
      */
-    protected function getState()
+    protected function getState(): string
     {
         return Str::random(40);
     }
@@ -567,11 +567,11 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * Set the custom parameters of the request.
      *
-     * @param  array $parameters
+     * @param array $parameters
      *
      * @return $this
      */
-    public function with(array $parameters)
+    public function with(array $parameters): self
     {
         $this->parameters = $parameters;
 

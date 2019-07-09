@@ -2,8 +2,8 @@
 
 namespace Fureev\Socialite\Two;
 
-use Illuminate\Support\Arr;
 use GuzzleHttp\ClientInterface;
+use Illuminate\Support\Arr;
 
 class FacebookProvider extends AbstractProvider implements ProviderInterface
 {
@@ -52,23 +52,23 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
-        return $this->buildAuthUrlFromBase('https://www.facebook.com/'.$this->version.'/dialog/oauth', $state);
+        return $this->buildAuthUrlFromBase('https://www.facebook.com/' . $this->version . '/dialog/oauth', $state);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
-        return $this->graphUrl.'/'.$this->version.'/oauth/access_token';
+        return $this->graphUrl . '/' . $this->version . '/oauth/access_token';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getAccessTokenResponse($code)
+    public function getAccessTokenResponse($code): array
     {
         $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
 
@@ -84,14 +84,14 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getUserByToken($token)
+    protected function getUserByToken($token): array
     {
-        $meUrl = $this->graphUrl.'/'.$this->version.'/me?access_token='.$token.'&fields='.implode(',', $this->fields);
+        $meUrl = $this->graphUrl . '/' . $this->version . '/me?access_token=' . $token . '&fields=' . implode(',', $this->fields);
 
-        if (! empty($this->clientSecret)) {
+        if (!empty($this->clientSecret)) {
             $appSecretProof = hash_hmac('sha256', $token, $this->clientSecret);
 
-            $meUrl .= '&appsecret_proof='.$appSecretProof;
+            $meUrl .= '&appsecret_proof=' . $appSecretProof;
         }
 
         $response = $this->getHttpClient()->get($meUrl, [
@@ -108,12 +108,12 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function mapUserToObject(array $user)
     {
-        $avatarUrl = $this->graphUrl.'/'.$this->version.'/'.$user['id'].'/picture';
+        $avatarUrl = $this->graphUrl . '/' . $this->version . '/' . $user['id'] . '/picture';
 
         return (new User)->setRaw($user)->configurable([
             'id' => $user['id'], 'nickname' => null, 'name' => isset($user['name']) ? $user['name'] : null,
-            'email' => isset($user['email']) ? $user['email'] : null, 'avatar' => $avatarUrl.'?type=normal',
-            'avatar_original' => $avatarUrl.'?width=1920',
+            'email' => isset($user['email']) ? $user['email'] : null, 'avatar' => $avatarUrl . '?type=normal',
+            'avatar_original' => $avatarUrl . '?width=1920',
             'profileUrl' => isset($user['link']) ? $user['link'] : null,
         ]);
     }
@@ -121,7 +121,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getCodeFields($state = null)
+    protected function getCodeFields($state = null): array
     {
         $fields = parent::getCodeFields($state);
 
@@ -139,10 +139,11 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * Set the user fields to request from Facebook.
      *
-     * @param  array  $fields
+     * @param array $fields
+     *
      * @return $this
      */
-    public function fields(array $fields)
+    public function fields(array $fields): self
     {
         $this->fields = $fields;
 
@@ -154,7 +155,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      *
      * @return $this
      */
-    public function asPopup()
+    public function asPopup(): self
     {
         $this->popup = true;
 
@@ -166,7 +167,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      *
      * @return $this
      */
-    public function reRequest()
+    public function reRequest(): self
     {
         $this->reRequest = true;
 

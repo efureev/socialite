@@ -17,7 +17,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
         return $this->buildAuthUrlFromBase('https://github.com/login/oauth/authorize', $state);
     }
@@ -25,7 +25,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
         return 'https://github.com/login/oauth/access_token';
     }
@@ -33,9 +33,9 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getUserByToken($token)
+    protected function getUserByToken($token): array
     {
-        $userUrl = 'https://api.github.com/user?access_token='.$token;
+        $userUrl = 'https://api.github.com/user?access_token=' . $token;
 
         $response = $this->getHttpClient()->get(
             $userUrl, $this->getRequestOptions()
@@ -53,12 +53,13 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
     /**
      * Get the email for the given access token.
      *
-     * @param  string  $token
+     * @param string $token
+     *
      * @return string|null
      */
-    protected function getEmailByToken($token)
+    protected function getEmailByToken($token): ?string
     {
-        $emailsUrl = 'https://api.github.com/user/emails?access_token='.$token;
+        $emailsUrl = 'https://api.github.com/user/emails?access_token=' . $token;
 
         try {
             $response = $this->getHttpClient()->get(
@@ -91,7 +92,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
      *
      * @return array
      */
-    protected function getRequestOptions()
+    protected function getRequestOptions(): array
     {
         return [
             'headers' => [

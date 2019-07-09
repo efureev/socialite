@@ -32,7 +32,7 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
         return $this->buildAuthUrlFromBase('https://accounts.google.com/o/oauth2/auth', $state);
     }
@@ -40,7 +40,7 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
         return 'https://accounts.google.com/o/oauth2/token';
     }
@@ -48,13 +48,13 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     /**
      * Get the POST fields for the token request.
      *
-     * @param  string $code
+     * @param string $code
      *
      * @return array
      */
-    protected function getTokenFields(string $code)
+    protected function getTokenFields(string $code): array
     {
-        return array_add(
+        return Arr::add(
             parent::getTokenFields($code), 'grant_type', 'authorization_code'
         );
     }
@@ -62,14 +62,14 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getUserByToken($token)
+    protected function getUserByToken($token): array
     {
         $response = $this->getHttpClient()->get('https://www.googleapis.com/plus/v1/people/me?', [
-            'query'   => [
+            'query' => [
                 'prettyPrint' => 'false',
             ],
             'headers' => [
-                'Accept'        => 'application/json',
+                'Accept' => 'application/json',
                 'Authorization' => 'Bearer ' . $token,
             ],
         ]);
@@ -85,8 +85,8 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
         $avatarUrl = Arr::get($user, 'image.url');
 
         return (new User)->setRaw($user)->configurable([
-            'id'              => $user['id'], 'nickname' => Arr::get($user, 'nickname'), 'name' => $user['displayName'],
-            'email'           => Arr::get($user, 'emails.0.value'), 'avatar' => $avatarUrl,
+            'id' => $user['id'], 'nickname' => Arr::get($user, 'nickname'), 'name' => $user['displayName'],
+            'email' => Arr::get($user, 'emails.0.value'), 'avatar' => $avatarUrl,
             'avatar_original' => preg_replace('/\?sz=([0-9]+)/', '', $avatarUrl),
         ], false);
     }

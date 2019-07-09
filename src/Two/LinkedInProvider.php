@@ -34,7 +34,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
         return $this->buildAuthUrlFromBase('https://www.linkedin.com/oauth/v2/authorization', $state);
     }
@@ -42,7 +42,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
         return 'https://www.linkedin.com/oauth/v2/accessToken';
     }
@@ -50,10 +50,11 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     /**
      * Get the POST fields for the token request.
      *
-     * @param  string  $code
+     * @param string $code
+     *
      * @return array
      */
-    protected function getTokenFields($code)
+    protected function getTokenFields($code): array
     {
         return parent::getTokenFields($code) + ['grant_type' => 'authorization_code'];
     }
@@ -61,16 +62,16 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getUserByToken($token)
+    protected function getUserByToken($token): array
     {
         $fields = implode(',', $this->fields);
 
-        $url = 'https://api.linkedin.com/v1/people/~:('.$fields.')';
+        $url = 'https://api.linkedin.com/v1/people/~:(' . $fields . ')';
 
         $response = $this->getHttpClient()->get($url, [
             'headers' => [
                 'x-li-format' => 'json',
-                'Authorization' => 'Bearer '.$token,
+                'Authorization' => 'Bearer ' . $token,
             ],
         ]);
 
@@ -92,10 +93,11 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     /**
      * Set the user fields to request from LinkedIn.
      *
-     * @param  array  $fields
+     * @param array $fields
+     *
      * @return $this
      */
-    public function fields(array $fields)
+    public function fields(array $fields): self
     {
         $this->fields = $fields;
 

@@ -24,7 +24,7 @@ class SocialiteServiceProvider extends ServiceProvider
      *
      * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [Factory::class];
     }
@@ -34,7 +34,7 @@ class SocialiteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton(Factory::class, function ($app) {
             return new SocialiteManager($app);

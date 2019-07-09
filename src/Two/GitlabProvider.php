@@ -7,7 +7,7 @@ class GitlabProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
         return $this->buildAuthUrlFromBase('https://gitlab.com/oauth/authorize', $state);
     }
@@ -15,7 +15,7 @@ class GitlabProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
         return 'https://gitlab.com/oauth/token';
     }
@@ -23,15 +23,13 @@ class GitlabProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getUserByToken($token)
+    protected function getUserByToken($token): array
     {
-        $userUrl = 'https://gitlab.com/api/v3/user?access_token='.$token;
+        $userUrl = 'https://gitlab.com/api/v3/user?access_token=' . $token;
 
         $response = $this->getHttpClient()->get($userUrl);
 
-        $user = json_decode($response->getBody(), true);
-
-        return $user;
+        return json_decode($response->getBody(), true);
     }
 
     /**
@@ -51,7 +49,7 @@ class GitlabProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getTokenFields($code)
+    protected function getTokenFields($code): array
     {
         return parent::getTokenFields($code) + ['grant_type' => 'authorization_code'];
     }

@@ -29,4 +29,9 @@ interface Provider
      */
     public function getName(): string;
 
+    /**
+     * @return string
+     */
+    public function getLabel(): string;
+
 }
