@@ -2,6 +2,8 @@
 
 namespace Fureev\Socialite\Two;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use RuntimeException;
 
 /**
@@ -9,7 +11,7 @@ use RuntimeException;
  *
  * @package Fureev\Socialite\Two
  */
-class ErrorFromServerException extends RuntimeException
+class ErrorFromServerException extends RuntimeException implements Arrayable
 {
     /** @var string|null */
     public $description;
@@ -32,5 +34,27 @@ class ErrorFromServerException extends RuntimeException
         $this->uri = $uri;
 
         parent::__construct($error, $code, $previous);
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'error' => $this->getMessage(),
+            'description' => $this->description,
+            'uri' => $this->uri,
+        ];
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return mixed
+     */
+    public function render(Request $request)
+    {
+        return $request->json($this->toArray(), 400);
     }
 }
