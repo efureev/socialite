@@ -300,6 +300,8 @@ abstract class AbstractProvider implements ProviderContract
             throw new InvalidStateException;
         }
 
+        $this->checkOnError();
+
         $response = $this->getAccessTokenResponse($this->getCode());
 
         $user = $this->mapUserToObject($this->getUserByToken(
@@ -342,6 +344,18 @@ abstract class AbstractProvider implements ProviderContract
     }
 
     /**
+     * Check for errors
+     */
+    protected function checkOnError(): void
+    {
+        $key = $this->getDriverConfig('errorKey', 'error');
+
+        if ($error = $this->request->query($key)) {
+            throw new ErrorFromServerException($error, $this->request->query($this->getDriverConfig('errorDescriptionKey', 'error_description')));
+        }
+    }
+
+    /**
      * Get the access token response for the given code.
      *
      * @param string $code
@@ -369,7 +383,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return array
      */
-    protected function getTokenBaseFields(string $code): array
+    protected function getTokenBaseFields(?string $code): array
     {
         return [
             'client_id' => $this->clientId,
@@ -384,7 +398,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return array
      */
-    protected function getTokenFields(string $code): array
+    protected function getTokenFields(?string $code): array
     {
         $data = $this->getTokenBaseFields($code);
 
@@ -403,7 +417,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return string
      */
-    protected function getCode(): string
+    protected function getCode(): ?string
     {
         return $this->request->query('code');
     }
