@@ -351,7 +351,10 @@ abstract class AbstractProvider implements ProviderContract
         $key = $this->getDriverConfig('errorKey', 'error');
 
         if ($error = $this->request->query($key)) {
-            throw new ErrorFromServerException($error, $this->request->query($this->getDriverConfig('errorDescriptionKey', 'error_description')));
+            throw new ErrorFromServerException($error,
+                $this->request->query($this->getDriverConfig('errorDescriptionKey', 'error_description')),
+                $this->request->query($this->getDriverConfig('errorUriKey', 'error_uri'))
+            );
         }
     }
 
