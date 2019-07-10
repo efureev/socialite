@@ -401,7 +401,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return array
      */
-    protected function getTokenFields(?string $code): array
+    protected function getTokenFields(string $code): array
     {
         $data = $this->getTokenBaseFields($code);
 
