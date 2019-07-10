@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Php\Support\Helpers\Json;
 use Php\Support\Traits\ConfigurableTrait;
 
 /**
@@ -359,11 +360,10 @@ abstract class AbstractProvider implements ProviderContract
     }
 
     /**
-     * Get the access token response for the given code.
-     *
      * @param string $code
      *
      * @return array
+     * @throws \Php\Support\Exceptions\JsonException
      */
     public function getAccessTokenResponse($code): array
     {
@@ -374,7 +374,7 @@ abstract class AbstractProvider implements ProviderContract
             $postKey => $this->getTokenFields($code),
         ]);
 
-        return json_decode($response->getBody(), true);
+        return Json::decode($response->getBody());
     }
 
     protected $tokenFieldsExtra = [];

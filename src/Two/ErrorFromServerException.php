@@ -47,14 +47,4 @@ class ErrorFromServerException extends RuntimeException implements Arrayable
             'uri' => $this->uri,
         ];
     }
-
-    /**
-     * @param Request $request
-     *
-     * @return mixed
-     */
-    public function render(Request $request)
-    {
-        return $request->json($this->toArray(), 400);
-    }
 }
