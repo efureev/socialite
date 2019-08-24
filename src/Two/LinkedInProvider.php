@@ -11,7 +11,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
      *
      * @var array
      */
-    protected $scopes = ['r_basicprofile', 'r_emailaddress'];
+    protected $scopes = ['r_liteprofile', 'r_emailaddress'];
 
     /**
      * The separating character for the requested scopes.
@@ -54,7 +54,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
      *
      * @return array
      */
-    protected function getTokenFields($code): array
+    protected function getTokenFields(string $code): array
     {
         return parent::getTokenFields($code) + ['grant_type' => 'authorization_code'];
     }
@@ -64,18 +64,44 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token): array
     {
-        $fields = implode(',', $this->fields);
+        $basicProfile = $this->getBasicProfile($token);
+        $emailAddress = $this->getEmailAddress($token);
 
-        $url = 'https://api.linkedin.com/v1/people/~:(' . $fields . ')';
+        return array_merge($basicProfile, $emailAddress);
+    }
 
+    /**
+     * @param $token
+     *
+     * @return array
+     */
+    protected function getBasicProfile($token)
+    {
+        $url = 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))';
         $response = $this->getHttpClient()->get($url, [
             'headers' => [
-                'x-li-format' => 'json',
+                'X-RestLi-Protocol-Version' => '2.0.0',
                 'Authorization' => 'Bearer ' . $token,
             ],
         ]);
+        return (array)json_decode($response->getBody(), true);
+    }
 
-        return json_decode($response->getBody(), true);
+    /**
+     * @param $token
+     *
+     * @return array
+     */
+    protected function getEmailAddress($token)
+    {
+        $url = 'https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))';
+        $response = $this->getHttpClient()->get($url, [
+            'headers' => [
+                'X-RestLi-Protocol-Version' => '2.0.0',
+                'Authorization' => 'Bearer ' . $token,
+            ],
+        ]);
+        return (array)Arr::get((array)json_decode($response->getBody(), true), 'elements.0.handle~');
     }
 
     /**

@@ -13,6 +13,7 @@ Socialite provides an expressive, fluent interface to OAuth authentication with 
 **You can write own config for your Custom Provider.**
 
 **ONLY PHP 7.1 and upper**
+**ONLY Laravel 5.7 and more..**
 
 Adapters for other platforms are listed at the community driven [Socialite Providers](https://socialiteproviders.github.io/) website.
 
