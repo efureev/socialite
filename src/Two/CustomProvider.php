@@ -2,6 +2,7 @@
 
 namespace Fureev\Socialite\Two;
 
+use Fureev\Socialite\Separator;
 use Illuminate\Support\Arr;
 use Php\Support\Helpers\Arr as pArr;
 use Php\Support\Helpers\Json;
@@ -42,8 +43,17 @@ class CustomProvider extends AbstractProvider implements ProviderInterface
     protected function mapUserToObject(array $user)
     {
         $fields = $this->getDriverConfig('mapFields');
-        array_walk($fields, static function (&$val, $k, $user) {
-            $val = Arr::get($user, $val);
+        array_walk($fields, static function (&$val, $k) use ($user) {
+            if (is_array($val)) {
+                $newVal = [];
+                foreach ($val as $v) {
+                    $newVal[] = $v instanceof Separator ? (string)$v : Arr::get($user, $v);
+                }
+                $val = implode('', $newVal);
+            } else {
+                $val = Arr::get($user, $val);
+            }
+
         }, $user);
 
         return (new User)->setRaw($user)->configurable($fields);
