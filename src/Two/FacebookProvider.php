@@ -173,4 +173,17 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
 
         return $this;
     }
+
+    /**
+     * Specify which graph version should be used.
+     *
+     * @param  string  $version
+     * @return $this
+     */
+    public function usingGraphVersion(string $version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
 }

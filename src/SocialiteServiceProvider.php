@@ -3,6 +3,7 @@
 namespace Fureev\Socialite;
 
 use Fureev\Socialite\Contracts\Factory;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -10,15 +11,8 @@ use Illuminate\Support\ServiceProvider;
  *
  * @package Fureev\Socialite
  */
-class SocialiteServiceProvider extends ServiceProvider
+class SocialiteServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
-
     /**
      * Get the services provided by the provider.
      *
