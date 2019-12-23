@@ -2,6 +2,7 @@
 
 namespace Fureev\Socialite;
 
+use Fureev\Socialite\Two\AbstractProvider;
 use Fureev\Socialite\Two\CustomProvider;
 use Fureev\Socialite\Two\GithubProvider;
 use Fureev\Socialite\Two\VkProvider;
@@ -20,12 +21,12 @@ use Php\Support\Exceptions\MissingConfigException;
 class SocialiteManager extends Manager implements Contracts\Factory
 {
     /** @var array */
-    protected $config;
+    protected $configSocial;
 
     /**
      * Get a driver instance.
      *
-     * @param  string $driver
+     * @param string $driver
      *
      * @return mixed
      */
@@ -55,9 +56,9 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     public function getConfig($key = null)
     {
-        if (!$this->config) {
 
-            if (!$config = $this->app['config'][ static::configSection() ]) {
+        if (!$this->configSocial) {
+            if (!$config = $this->app['config'][static::configSection()]) {
                 throw new MissingConfigException($config, static::configSection());
             }
 
@@ -65,10 +66,10 @@ class SocialiteManager extends Manager implements Contracts\Factory
                 throw new InvalidConfigException($config);
             }
 
-            $this->config = $config;
+            $this->configSocial = $config;
         }
 
-        return Arr::get($this->config, $key);
+        return Arr::get($this->configSocial, $key);
 
     }
 
@@ -82,7 +83,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
         $result = $this->getDrivers();
 
         foreach ($this->customCreators ?? [] as $key => $val) {
-            $result[ $key ] = $val;
+            $result[$key] = $val;
         }
 
         return $result;
@@ -106,12 +107,12 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Build an OAuth 2 provider instance.
      *
-     * @param  string $provider
-     * @param  array  $config
+     * @param string $provider
+     * @param array $config
      *
      * @return \Fureev\Socialite\Two\AbstractProvider
      */
-    public function buildProvider($provider, $config)
+    public function buildProvider($provider, $config): AbstractProvider
     {
         return new $provider($this->app['request'], $this->formatConfig($config));
 
@@ -120,11 +121,11 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Format the server configuration.
      *
-     * @param  array $config
+     * @param array $config
      *
      * @return array
      */
-    public function formatConfig(array $config)
+    public function formatConfig(array $config): array
     {
         if (!isset($config['redirectUrl'])) {
 //            dd($config);
@@ -153,8 +154,8 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Get the default driver name.
      *
-     * @throws \InvalidArgumentException
      * @return string
+     * @throws \InvalidArgumentException
      */
     public function getDefaultDriver()
     {
@@ -179,7 +180,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
     }
 
     /**
-     * @param string     $name
+     * @param string $name
      * @param array|null $driverConfig
      *
      * @return CustomProvider|null
@@ -207,16 +208,16 @@ class SocialiteManager extends Manager implements Contracts\Factory
         }
 
         if ($this->hasBuildInDriver($name)) {
-            $this->drivers[ $name ] = $this->{static::buildInDriverMethodName($name)}($driverConfig);
+            $this->drivers[$name] = $this->{static::buildInDriverMethodName($name)}($driverConfig);
         } else {
             $provider = (!empty($driverConfig['provider']) && class_exists((string)$driverConfig['provider']))
                 ? $driverConfig['provider']
                 : CustomProvider::class;
 
-            $this->drivers[ $name ] = $this->buildProvider($provider, $driverConfig);
+            $this->drivers[$name] = $this->buildProvider($provider, $driverConfig);
         }
 
-        return $this->drivers[ $name ];
+        return $this->drivers[$name];
     }
 
     /**
@@ -248,7 +249,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createDriver($driver)
     {
-        if (isset($this->customCreators[ $driver ])) {
+        if (isset($this->customCreators[$driver])) {
             return $this->callCustomCreator($driver);
         }
 

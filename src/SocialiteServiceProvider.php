@@ -36,7 +36,7 @@ class SocialiteServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(Factory::class, function ($app) {
+        $this->app->singleton(Factory::class, static function ($app) {
             return new SocialiteManager($app);
         });
     }
