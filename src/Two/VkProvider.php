@@ -106,7 +106,7 @@ class VkProvider extends AbstractProvider implements ProviderInterface
         return (new User())->setRaw($user)->configurable([
             'id' => Arr::get($user, 'id'),
             'nickname' => Arr::get($user, 'screen_name'),
-            'name' => Arr::get($user, 'screen_name', trim(Arr::get($user, 'first_name') . ' ' . Arr::get($user, 'last_name'))),
+            'name' => trim(Arr::get($user, 'first_name') . ' ' . Arr::get($user, 'last_name')),
             'email' => Arr::get($user, 'email'),
             'avatar' => Arr::get($user, 'photo'),
         ]);
