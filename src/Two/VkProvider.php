@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 
 class VkProvider extends AbstractProvider implements ProviderInterface
 {
-    const VERSION = '5.101';
+    const VERSION = '5.103';
 
     /**
      * The scopes being requested.
