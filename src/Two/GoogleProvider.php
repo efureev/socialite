@@ -32,9 +32,9 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state): string
+    public function getAuthorizeUrl(): string
     {
-        return $this->buildAuthUrlFromBase('https://accounts.google.com/o/oauth2/auth', $state);
+        return 'https://accounts.google.com/o/oauth2/auth';
     }
 
     /**

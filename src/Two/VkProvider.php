@@ -28,7 +28,12 @@ class VkProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getAuthUrl($state): string
     {
-        return $this->buildAuthUrlFromBase('https://oauth.vk.com/authorize', $state);
+        return $this->buildAuthUrlFromBase($this->getAuthorizeUrl(), $state);
+    }
+
+    public function getAuthorizeUrl(): string
+    {
+        return 'https://oauth.vk.com/authorize';
     }
 
     /**

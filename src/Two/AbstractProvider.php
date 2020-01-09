@@ -193,13 +193,23 @@ abstract class AbstractProvider implements ProviderContract
     }
 
     /**
-     * Get the authentication URL for the provider.
+     * Get the made authentication URL for the provider.
      *
      * @param string $state
      *
      * @return string
      */
-    abstract protected function getAuthUrl($state): string;
+    protected function getAuthUrl($state): string
+    {
+        return $this->buildAuthUrlFromBase($this->getAuthorizeUrl(), $state);
+    }
+
+    /**
+     * The authentication URL for the provider.
+     *
+     * @return string
+     */
+    abstract public function getAuthorizeUrl(): string;
 
     /**
      * Get the token URL for the provider.

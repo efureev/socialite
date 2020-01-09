@@ -17,9 +17,9 @@ class CustomProvider extends AbstractProvider implements ProviderInterface
      * {@inheritdoc}
      * @throws \Exception
      */
-    protected function getAuthUrl($state): string
+    public function getAuthorizeUrl(): string
     {
-        return $this->buildAuthUrlFromBase($this->getDriverConfig('url_auth'), $state);
+        return $this->getDriverConfig('url_auth');
     }
 
     /**

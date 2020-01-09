@@ -26,9 +26,9 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state): string
+    public function getAuthorizeUrl(): string
     {
-        return $this->buildAuthUrlFromBase('https://bitbucket.org/site/oauth2/authorize', $state);
+        return 'https://bitbucket.org/site/oauth2/authorize';
     }
 
     /**

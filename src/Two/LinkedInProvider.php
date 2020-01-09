@@ -34,10 +34,11 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAuthUrl($state): string
+    public function getAuthorizeUrl(): string
     {
-        return $this->buildAuthUrlFromBase('https://www.linkedin.com/oauth/v2/authorization', $state);
+        return 'https://www.linkedin.com/oauth/v2/authorization';
     }
+
 
     /**
      * {@inheritdoc}
