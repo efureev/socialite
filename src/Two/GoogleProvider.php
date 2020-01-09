@@ -80,7 +80,7 @@ class GoogleProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): User
     {
         // Deprecated: Fields added to keep backwards compatibility in 4.0. These will be removed in 5.0
         $user['id'] = Arr::get($user, 'sub');

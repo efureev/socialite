@@ -107,7 +107,7 @@ class LinkedInProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): User
     {
         return (new User)->setRaw($user)->configurable([
             'id' => $user['id'], 'nickname' => null, 'name' => Arr::get($user, 'formattedName'),

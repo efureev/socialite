@@ -43,7 +43,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
 
         $user = json_decode($response->getBody(), true);
 
-        if (in_array('user:email', $this->scopes)) {
+        if (in_array('user:email', $this->scopes, true)) {
             $user['email'] = $this->getEmailByToken($token);
         }
 
@@ -79,7 +79,7 @@ class GithubProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): User
     {
         return (new User)->setRaw($user)->configurable([
             'id' => $user['id'], 'nickname' => $user['login'], 'name' => Arr::get($user, 'name'),

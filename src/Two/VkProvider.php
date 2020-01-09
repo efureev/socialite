@@ -40,25 +40,25 @@ class VkProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
-     * @return \Fureev\Socialite\Contracts\User|\Fureev\Socialite\Two\AbstractProvider|\Fureev\Socialite\Two\User
-     * @throws \Exception
+     * @param string $code
+     *
+     * @return User
+     * @throws \Php\Support\Exceptions\JsonException
      */
-    public function user()
+    public function userFromCode(string $code): User
     {
-        if ($this->hasInvalidState()) {
-            throw new InvalidStateException;
-        }
-
-        $response = $this->getAccessTokenResponse($this->getCode());
+        $response = $this->getAccessTokenResponse($code);
 
         $token = Arr::get($response, 'access_token');
 
         $user = $this->mapUserToObject($this->getUserByToken($response));
 
-        return $user->setToken($token)
+        return $user
+            ->setToken($token)
             ->setRefreshToken(Arr::get($response, 'refresh_token'))
             ->setExpiresIn(Arr::get($response, 'expires_in'));
     }
+
 
     /**
      * {@inheritdoc}
@@ -101,7 +101,7 @@ class VkProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): User
     {
         return (new User())->setRaw($user)->configurable([
             'id' => Arr::get($user, 'id'),

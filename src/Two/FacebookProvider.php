@@ -2,9 +2,6 @@
 
 namespace Fureev\Socialite\Two;
 
-use GuzzleHttp\ClientInterface;
-use Illuminate\Support\Arr;
-
 class FacebookProvider extends AbstractProvider implements ProviderInterface
 {
     /**
@@ -19,7 +16,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      *
      * @var string
      */
-    protected $version = 'v3.3';
+    protected $version = 'v5.0';
 
     /**
      * The user fields being requested.
@@ -68,22 +65,6 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getAccessTokenResponse($code): array
-    {
-        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
-
-        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            $postKey => $this->getTokenFields($code),
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        return Arr::add($data, 'expires_in', Arr::pull($data, 'expires'));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getUserByToken($token): array
     {
         $meUrl = $this->graphUrl . '/' . $this->version . '/me?access_token=' . $token . '&fields=' . implode(',', $this->fields);
@@ -106,15 +87,17 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): User
     {
         $avatarUrl = $this->graphUrl . '/' . $this->version . '/' . $user['id'] . '/picture';
 
         return (new User)->setRaw($user)->configurable([
-            'id' => $user['id'], 'nickname' => null, 'name' => isset($user['name']) ? $user['name'] : null,
-            'email' => isset($user['email']) ? $user['email'] : null, 'avatar' => $avatarUrl . '?type=normal',
+            'id' => $user['id'], 'nickname' => null,
+            'name' => $user['name'] ?? null,
+            'email' => $user['email'] ?? null,
+            'avatar' => $avatarUrl . '?type=normal',
             'avatar_original' => $avatarUrl . '?width=1920',
-            'profileUrl' => isset($user['link']) ? $user['link'] : null,
+            'profileUrl' => $user['link'] ?? null,
         ]);
     }
 
@@ -177,7 +160,8 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     /**
      * Specify which graph version should be used.
      *
-     * @param  string  $version
+     * @param string $version
+     *
      * @return $this
      */
     public function usingGraphVersion(string $version)

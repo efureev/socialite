@@ -222,9 +222,9 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @param array $user
      *
-     * @return \Fureev\Socialite\Two\User
+     * @return User
      */
-    abstract protected function mapUserToObject(array $user);
+    abstract protected function mapUserToObject(array $user): User;
 
     /**
      * Redirect the user of the application to the provider's authentication screen.
@@ -251,7 +251,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return string
      */
-    protected function buildAuthUrlFromBase($url, $state)
+    protected function buildAuthUrlFromBase($url, $state): string
     {
         return $url . '?' . http_build_query($this->getCodeFields($state), '', '&', $this->encodingType);
     }
@@ -263,7 +263,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return array
      */
-    protected function getCodeFields($state = null)
+    protected function getCodeFields($state = null): array
     {
         $fields = [
             'client_id' => $this->clientId,
@@ -287,7 +287,7 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @return string
      */
-    protected function formatScopes(array $scopes, $scopeSeparator)
+    protected function formatScopes(array $scopes, $scopeSeparator): string
     {
         return implode($scopeSeparator, $scopes);
     }
@@ -295,7 +295,7 @@ abstract class AbstractProvider implements ProviderContract
     /**
      * {@inheritdoc}
      */
-    public function user()
+    public function user(): User
     {
         if ($this->hasInvalidState()) {
             throw new InvalidStateException;
@@ -303,13 +303,25 @@ abstract class AbstractProvider implements ProviderContract
 
         $this->checkOnError();
 
+        return $this->userFromCode($this->getCode());
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return User
+     * @throws \Php\Support\Exceptions\JsonException
+     */
+    public function userFromCode(string $code): User
+    {
         $response = $this->getAccessTokenResponse($this->getCode());
 
-        $user = $this->mapUserToObject($this->getUserByToken(
-            $token = Arr::get($response, 'access_token')
-        ));
+        $token = Arr::get($response, 'access_token');
 
-        return $user->setToken($token)
+        $user = $this->mapUserToObject($token);
+
+        return $user
+            ->setToken($token)
             ->setRefreshToken(Arr::get($response, 'refresh_token'))
             ->setExpiresIn(Arr::get($response, 'expires_in'));
     }
@@ -319,9 +331,9 @@ abstract class AbstractProvider implements ProviderContract
      *
      * @param string $token
      *
-     * @return \Fureev\Socialite\Two\User
+     * @return User
      */
-    public function userFromToken($token)
+    public function userFromToken($token): User
     {
         $user = $this->mapUserToObject($this->getUserByToken($token));
 

@@ -3,8 +3,7 @@
 namespace Fureev\Socialite\Two;
 
 use Fureev\Socialite\Separator;
-use Illuminate\Support\Arr;
-use Php\Support\Helpers\Arr as pArr;
+use Php\Support\Helpers\Arr;
 use Php\Support\Helpers\Json;
 
 /**
@@ -40,7 +39,7 @@ class CustomProvider extends AbstractProvider implements ProviderInterface
      * @return \Fureev\Socialite\Two\User
      * @throws \Exception
      */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): User
     {
         $fields = $this->getDriverConfig('mapFields');
         array_walk($fields, static function (&$val, $k) use ($user) {
@@ -67,7 +66,7 @@ class CustomProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token): array
     {
-        $this->guzzle = pArr::replaceByTemplate($this->guzzle, ['{{%TOKEN%}}' => $token]);
+        $this->guzzle = Arr::replaceByTemplate($this->guzzle, ['{{%TOKEN%}}' => $token]);
 
         $response = $this->getHttpClient()->get($this->getDriverConfig('userInfoUrl'), $this->guzzle);
 

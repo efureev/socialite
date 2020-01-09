@@ -5,6 +5,7 @@ namespace Fureev\Socialite\Two;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Arr;
+use Php\Support\Helpers\Json;
 
 class BitbucketProvider extends AbstractProvider implements ProviderInterface
 {
@@ -85,11 +86,13 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): User
     {
         return (new User)->setRaw($user)->configurable([
-            'id' => $user['uuid'], 'nickname' => $user['username'],
-            'name' => Arr::get($user, 'display_name'), 'email' => Arr::get($user, 'email'),
+            'id' => $user['uuid'],
+            'nickname' => $user['username'],
+            'name' => Arr::get($user, 'display_name'),
+            'email' => Arr::get($user, 'email'),
             'avatar' => Arr::get($user, 'links.avatar.href'),
         ]);
     }
@@ -99,9 +102,10 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
      *
      * @param string $code
      *
-     * @return string
+     * @return array
+     * @throws \Php\Support\Exceptions\JsonException
      */
-    public function getAccessToken($code)
+    public function getAccessTokenResponse($code): array
     {
         $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
 
@@ -111,8 +115,9 @@ class BitbucketProvider extends AbstractProvider implements ProviderInterface
             $postKey => $this->getTokenFields($code),
         ]);
 
-        return json_decode($response->getBody(), true)['access_token'];
+        return Json::decode($response->getBody());
     }
+
 
     /**
      * Get the POST fields for the token request.
