@@ -519,6 +519,16 @@ abstract class AbstractProvider implements ProviderContract
     }
 
     /**
+     * Validate the driver for readiness
+     *
+     * @return bool
+     */
+    public function valid(): bool
+    {
+        return !empty($this->clientId) || !empty($this->clientSecret);
+    }
+
+    /**
      * Get a instance of the Guzzle HTTP client.
      *
      * @return Client
