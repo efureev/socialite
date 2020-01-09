@@ -392,7 +392,7 @@ abstract class AbstractProvider implements ProviderContract
             'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
             'code' => $code,
-            'redirect_uri' => $this->callbackUrl,
+            'redirect_uri' => $this->redirectUrl,
         ];
     }
 
