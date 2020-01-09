@@ -76,17 +76,31 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Return list of all Providers: driver, customDriver (\Closure)
      *
-     * @return \Fureev\Socialite\Two\CustomProvider[]
+     * @param bool $valid
+     *
+     * @return AbstractProvider[]
      */
-    public function getProviders()
+    public function getProviders($valid = true): array
     {
-        $result = $this->getDrivers();
+        $result = $this->{$valid ? 'getValidDrivers' : 'getDrivers'}();
 
         foreach ($this->customCreators ?? [] as $key => $val) {
-            $result[$key] = $val;
+            if ($val->valid()) {
+                $result[$key] = $val;
+            }
         }
 
         return $result;
+    }
+
+    /**
+     * Return list of all valid drivers
+     *
+     * @return array
+     */
+    public function getValidDrivers(): array
+    {
+        return collect($this->getDrivers())->filter->valid()->toArray();
     }
 
 
@@ -95,7 +109,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      *
      * @param array|null $config
      *
-     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @return AbstractProvider
      * @throws \Php\Support\Exceptions\InvalidConfigException
      * @throws \Php\Support\Exceptions\MissingConfigException
      */
@@ -110,7 +124,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      * @param string $provider
      * @param array $config
      *
-     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @return AbstractProvider
      */
     public function buildProvider($provider, $config): AbstractProvider
     {
@@ -259,7 +273,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Create an instance of the specified driver.
      *
-     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @return AbstractProvider
      * @throws \Php\Support\Exceptions\InvalidConfigException
      * @throws \Php\Support\Exceptions\MissingConfigException
      */
@@ -269,7 +283,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
     }
 
     /**
-     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @return AbstractProvider
      * @throws \Php\Support\Exceptions\InvalidConfigException
      * @throws \Php\Support\Exceptions\MissingConfigException
      */
@@ -281,7 +295,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Create an instance of the specified driver.
      *
-     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @return AbstractProvider
      */
     /*protected function createFacebookDriver()
     {
@@ -296,7 +310,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Create an instance of the specified driver.
      *
-     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @return AbstractProvider
      */
     /*  protected function createLinkedinDriver()
       {
@@ -310,7 +324,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Create an instance of the specified driver.
      *
-     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @return AbstractProvider
      */
     /* protected function createBitbucketDriver()
      {
@@ -324,7 +338,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
     /**
      * Create an instance of the specified driver.
      *
-     * @return \Fureev\Socialite\Two\AbstractProvider
+     * @return AbstractProvider
      */
     /* protected function createGitlabDriver()
      {
